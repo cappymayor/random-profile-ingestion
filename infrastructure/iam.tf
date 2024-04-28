@@ -51,6 +51,7 @@ resource "aws_iam_policy" "airflow_policy" {
   })
 }
 
+# attach the IAM policy to airflow user 
 resource "aws_iam_user_policy_attachment" "test-attach" {
   user       = aws_iam_user.airflow_user.name
   policy_arn = aws_iam_policy.airflow_policy.arn
