@@ -1,9 +1,7 @@
+import boto3
+import numpy
 import pandas
 
-import numpy
-
-
-import boto3
 
 def test():
     print(2 + 3)
