@@ -1,6 +1,7 @@
+import logging
+
 import pandas as pd
 from faker import Faker
-import logging
 
 # setting logging to enable us to debug when code fails
 logging.getLogger().setLevel(20)
