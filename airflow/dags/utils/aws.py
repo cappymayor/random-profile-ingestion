@@ -10,3 +10,8 @@ def aws_sesion():
         region_name="eu-central-1"
     )
     return session
+
+def boto3_client(aws_service):
+    client = boto3.client(aws_service)
+
+    return client
