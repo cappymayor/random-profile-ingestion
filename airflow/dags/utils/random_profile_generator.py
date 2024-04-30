@@ -1,10 +1,11 @@
 import logging
-
+from dateutil.tz import tzutc
 from aws import boto3_client
 import awswrangler as wr
 import pandas as pd
 from faker import Faker
 from aws import aws_sesion
+import json
 
 # setting logging to enable us to debug when code fails
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(name)s:%(message)s')
@@ -25,11 +26,25 @@ def random_profile_data_generator(total_records: int):
     sample = Faker()
     logging.info("finished faker module instantiation")
 
-    dataframe = pd.DataFrame(
+    df = pd.DataFrame(
         [sample.profile() for profile in range(total_records)])
-    logging.info(f"Dataframe created with {dataframe.shape[1]} records")
+    logging.info(f"Dataframe created with {df.shape[1]} records and {df.shape[0]} columns")
 
-    return dataframe
+# filtering out unproblematic column out for write to the lake
+    df_final = df[[
+        "job",
+        "company",
+        "ssn",
+        "residence",
+        "blood_group",
+        "username",
+        "name",
+        "sex",
+        "address",
+        "mail"
+    ]]
+
+    return df_final
 
 
 def extract_profile_to_s3():
@@ -42,12 +57,11 @@ def extract_profile_to_s3():
                     )
     return "Data successfully written to s3"
 
-
+print(extract_profile_to_s3())
 
 
 def get_latest_s3_object():
     
-
     client = boto3_client("s3")
     paginator = client.get_paginator("list_objects")
     response_iterator = paginator.paginate(
@@ -57,13 +71,12 @@ def get_latest_s3_object():
         'PageSize': 1000
     }
 )
-    full_response =  [response for response in response_iterator]
+    response_iterator =  [response for response in response_iterator]
 
-    return [i["Key"] for i in  full_response[0]["Contents"]]
+    response_list = [i for i in  response_iterator[0]["Contents"]]
 
+    latest_object_raw =  sorted(response_list, key=lambda d : d["LastModified"], reverse=True)[0]
 
-#print(extract_profile_to_s3())
-print(get_latest_s3_object())
+    latest_file = latest_object_raw["Key"]
 
-
-
+    return latest_file
