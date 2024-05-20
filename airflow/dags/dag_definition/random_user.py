@@ -8,7 +8,7 @@ from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from utils.random_user_logics import (extract_random_profile_to_s3,
                                       get_latest_s3_object)
 
-DAG_ID = 'aaaaaaaa'
+DAG_ID = 'random-user-ingestion'
 
 default_args = {
     'owner': 'data-eng',
@@ -53,7 +53,7 @@ copy_object_to_redshift = S3ToRedshiftOperator(
     table='random_profile',
     s3_bucket='random-user-extraction',
     s3_key="{{ ti.xcom_pull(task_ids='get_latest_s3_object') }}",
-    redshift_conn_id='postgres_default',
+    redshift_conn_id='redshift_default',
     aws_conn_id='aws_default',
     copy_options=['FORMAT AS PARQUET'],
     method='UPSERT',
