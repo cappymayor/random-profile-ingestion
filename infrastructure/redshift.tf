@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "test-attach" {
   policy_arn = aws_iam_policy.redshift_policy.arn
 }
 
-# create random password to be used for redshift
+# create random admin password to be used for redshift 
 resource "random_password" "password" {
   length  = 24
   special = false
@@ -67,7 +67,7 @@ resource "aws_ssm_parameter" "redshift_admin_password" {
   value = random_password.password.result
 }
 
-#Create Redshift cluster
+# Create Redshift cluster
 resource "aws_redshift_cluster" "core_data_engineers_cluster" {
   cluster_identifier  = "core-data-engineers-cluster"
   database_name       = "core_data_engineers"
