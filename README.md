@@ -6,3 +6,5 @@
 # HOW TO USE THE REPOSITORY
 * Clone the repository to your desire directory locally
     * git clone xxxx
+* Create a virtual environment
+*    python -m venv venv
