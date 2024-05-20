@@ -8,3 +8,6 @@
     * git clone xxxx
 * Create a virtual environment
     * `python -m venv venv`
+        * Run source venv/bin/activate
+    * Run `pip install isort`
+    * Run `pip install flake8`
